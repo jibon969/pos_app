@@ -1,0 +1,71 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+{% block title %}  - {{block.super}} {% endblock %}
+
+{% block content %}
+
+    <section class="best-selling-products">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <!-- Breadcrumbs -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mt-2">
+                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            <li class="breadcrumb-item">
+                                <a href="#">Order Overview</a>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mb-2">
+                    <div class="float-start">
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                    <div class="float-end">
+                        <form action="#" class="d-flex">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive text-nowrap">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Product Title</th>
+                                    <th>Price</th>
+                                    <th>Total Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table content goes here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <!-- Optional pagination or other content -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+{% endblock %}
