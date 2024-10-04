@@ -1,0 +1,48 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+{% block title %} Point of Sales - {{ block.super }}  {% endblock %}
+
+{% block content %}
+
+
+    <section class="best-selling-products">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <!-- Breadcrumbs -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mt-2">
+                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            <li class="breadcrumb-item">
+                                <a href="#">Order Overview</a>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-xl-3 col-md-3 col-lg-3">
+                    <div class="upload-content">
+                        <a href="#">Uplaod Slider</a>
+                    </div>
+                </div>
+                <div class="col col-xl-3 col-md-3 col-lg-3">
+                    <div class="upload-content">
+                        <a href="">Uplaod Category</a>
+                    </div>
+                </div>
+                <div class="col col-xl-3 col-md-3 col-lg-3">
+                    <div class="upload-content">
+                        <a href="">Uplaod SubCategory</a>
+                    </div>
+                </div>
+                <div class="col col-xl-3 col-md-3 col-lg-3">
+                    <div class="upload-content">
+                        <a href="">Uplaod Products</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
