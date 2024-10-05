@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale Receipt</title>
+</head>
+<body>
+    <h1>Sale Receipt</h1>
+    <h2>Sale ID: {{ sale.id }}</h2>
+    <h3>Customer: {{ sale.customer.first_name }} {{ sale.customer.last_name }}</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in sale.details.all %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total_detail }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Sub Total: {{ sale.sub_total }}</h3>
+    <h3>Tax: {{ sale.tax_amount }}</h3>
+    <h3>Grand Total: {{ sale.grand_total }}</h3>
+    <h3>Amount Paid: {{ sale.amount_payed }}</h3>
+    <h3>Change: {{ sale.amount_change }}</h3>
+</body>
+</html>

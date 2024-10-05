@@ -5,7 +5,7 @@ import shutil
 # Root directory of your Django project
 # project_root = '/Users/j.ahmed/coding/webs/eBussness/eBussness'
 
-project_root = '/Users/j.ahmed/coding/webs/eBussness/eBussness'
+project_root = 'E:/OthersProject/Point-of-Sale/pos_app'
 
 # List of directories to delete
 directories_to_delete = ['__pycache__', 'migrations']
