@@ -85,7 +85,7 @@
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 bg-dark text-white">
                     <div class="checkout-form">
-                        <form method="POST" action="">
+                        <!-- <form method="POST" action="">
                             {% csrf_token %}
                             <h4 class="p-2">Sub Total</h4>
                             <input type="text" name="sub-total" placeholder="0.00" class="form-control mb-3 text-end">
@@ -97,15 +97,28 @@
                             <input type="text" name="amount-payed" placeholder="0.00" class="form-control mb-3 text-end">
                     
                             <h4>Tax Amount</h4>
-                            <input type="text" name="tax-amount" placeholder="0.00" class="form-control mb-3 text-end" readonly>
+                            <input type="text" name="tax-amount" placeholder="0.00" class="form-control mb-3 text-end">
                             
                             <h4>Grand Total</h4>
-                            <input type="text" name="grand-total" placeholder="0.00" class="form-control mb-3 text-end" readonly>
+                            <input type="text" name="grand-total" placeholder="0.00" class="form-control mb-3 text-end">
                     
                             <div class="d-grid gap-2 mb-3">
                                 <button type="submit" class="btn btn-primary btn-block">Checkout</button>
                             </div>
+                        </form> -->
+                        <form method="POST" action="{% url 'checkout_view' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="tax-percentage" class="form-label">Tax (%)</label>
+                                <input type="number" name="tax_percentage" class="form-control" id="tax-percentage" value="0" min="0" step="0.01">
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount-payed" class="form-label">Amount Paid</label>
+                                <input type="number" name="amount_payed" class="form-control" id="amount-payed" min="0" step="0.01">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Checkout</button>
                         </form>
+                        
                     </div>
                 </div>
             </div>
@@ -113,3 +126,6 @@
     </section>
 
 {% endblock %}
+
+
+
