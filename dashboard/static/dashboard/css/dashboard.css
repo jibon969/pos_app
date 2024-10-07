@@ -1247,3 +1247,166 @@ h6 {
   width: 100px !important;
   border-radius: 10px !important;
 }
+
+
+/* point-of-sales-section */
+
+.point-of-sales-section{
+  overflow: hidden;
+  display: block;
+}
+
+.point-of-sales-title h3{
+  font-family: 'ICA Rubrik';
+  /* font-size: 40px; */
+}
+
+.add-item-section{
+  background-color: gainsboro;
+  padding: 6px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+
+.item-sub-title{
+  font-family: 'ICA Rubrik';
+}
+
+.add-item-button{
+  background-color: #000;
+  color: #FFF;
+  padding: 5px;
+  border-radius: 7px;
+}
+
+.table-fixed-width{
+  display: block; 
+  word-break: break-all; 
+  white-space: normal; 
+  overflow: hidden; 
+  width:260px;
+}
+
+
+/* Custom CSS ================================================ */
+.checkout-form{
+  background-color: #000;
+  color: #FFF;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+
+/* ===================*/
+#invoice-POS {
+  box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+  padding: 2mm;
+  margin: 0 auto;
+  width: 300px;
+  background: #FFF;
+}
+
+::selection {
+  background: #f31544;
+  color: #FFF;
+}
+::moz-selection {
+  background: #f31544;
+  color: #FFF;
+}
+h1 {
+  font-size: 1.5em;
+  color: #222;
+}
+h2 {
+  font-size: .9em;
+}
+h3 {
+  font-size: 1.2em;
+  font-weight: 300;
+  line-height: 2em;
+}
+p {
+  font-size: .7em;
+  color: #666;
+  line-height: 1.2em;
+}
+
+#top, #mid, #bot {
+  border-bottom: 1px solid #EEE;
+}
+
+#top {
+  min-height: 100px;
+}
+#mid {
+  min-height: 80px;
+}
+#bot {
+  min-height: 50px;
+}
+
+#top .logo {
+  height: 60px;
+  width: 60px;
+  background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
+  background-size: 60px 60px;
+}
+.clientlogo {
+  float: left;
+  height: 60px;
+  width: 60px;
+  background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+  background-size: 60px 60px;
+  border-radius: 50px;
+}
+.info {
+  display: block;
+  margin-left: 0;
+}
+.title {
+  float: right;
+}
+.title p {
+  text-align: right;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabletitle {
+  font-size: .5em;
+  background: #EEE;
+}
+.service {
+  border-bottom: 1px solid #EEE;
+}
+.item {
+  width: 24mm;
+}
+.itemtext {
+  font-size: .5em;
+}
+
+#legalcopy {
+  margin-top: 5mm;
+}
+
+.btn {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
