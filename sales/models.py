@@ -23,6 +23,12 @@ class Sale(models.Model):
 
     def __str__(self):
         return f"Sale ID: {self.id} | Grand Total: {self.grand_total}"
+    
+
+    # def calculate_totals(self):
+    #     total_price = sum([detail.total_price for detail in self.details.all()])
+    #     self.grand_total = total_price
+    #     self.save()
 
 
 # SaleDetail model to track individual items in a sale
