@@ -6,7 +6,7 @@
 
 
     <section class="point-of-sales-section">
-        <div class="container-fluid">
+        <div class="container-fluid p-0">
             <div class="point-of-sales-title">
                 <div class="row">
                     <div class="col">
@@ -28,7 +28,9 @@
                                         <select name="product_id" class="form-control form-control-lg"  id="select">
                                             {% for product in products %}
                                                 <option></option>
-                                                <option value="{{ product.id }}">{{ product.name }}</option>
+                                                <option value="{{ product.id }}">
+                                                    {{ product.name }}
+                                                </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -44,7 +46,7 @@
                                         <h4 class="item-sub-title">Add Item</h4>
                                         <div class="d-grid gap-2">
                                             <button type="submit" class="add-item-button">
-                                                <span class="fa fa-shopping-cart mx-2"></span> Add Item
+                                                <span class="fa fa-shopping-cart mx-2"></span> Add
                                             </button>
                                         </div>
                                     </div>
@@ -81,7 +83,6 @@
                                                                 min="1" 
                                                                 max="{{ sales.product.inventory.stock }}" 
                                                                 value="{{ sales.quantity }}" 
-                                                            
                                                             >
                                                             <button type="submit" class="btn btn-secondary">Update</button>
                                                         </div>
@@ -90,7 +91,7 @@
                                                 <td>{{ sales.price }}</td>
                                                 <td>{{ sales.total_price }}</td>
                                                 <td>
-                                                    <a href="{% url 'remove-item' sales.id  %}" class="btn btn-danger">
+                                                    <a href="{% url 'remove-item' sales.id %}" class="btn btn-danger">
                                                         <i class="fa fa-trash"></i>
                                                     </a>
                                                 </td>
@@ -110,7 +111,6 @@
                     
                                 <label for="tax_percentage">Tax (%)</label>
                                 <input type="text" class="form-control mb-2" id="tax_percentage" name="tax_percentage" value="5.00">
-                    
                                 <label for="amount_payed">Amount Payed</label>
                                 <input type="text" class="form-control mb-3" id="amount_payed" name="amount_payed" required>
                           
