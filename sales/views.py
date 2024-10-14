@@ -3,7 +3,9 @@ from django.contrib import messages
 from decimal import Decimal, InvalidOperation
 from products.models import Product, InventoryBatch
 from sales.models import Sale, SaleDetail
-
+from django.http import HttpResponse
+from weasyprint import HTML
+import tempfile
 
 def pos(request):
     products = Product.objects.all()
@@ -198,3 +200,34 @@ def checkout_success_view(request, sale_id):
         'sale_details': sale_details
     }
     return render(request, 'sales/checkout_success.html', context)
+
+
+def generate_pdf_view(request, sale_id):
+    # Get the sale by ID or return 404
+    sale = get_object_or_404(Sale, id=sale_id)
+    sale_details = sale.details.all()
+
+    # Create the context with sale data
+    context = {
+        'sale': sale,
+        'sale_details': sale_details
+    }
+
+    # Render the HTML template with context data
+    html_string = render(request, 'sales/checkout_success_pdf.html', context).content.decode('utf-8')
+
+    # Generate the PDF from the HTML string
+    html = HTML(string=html_string)
+
+    # Create a temporary file for the PDF
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        html.write_pdf(output.name)
+
+        # Move the file pointer to the start of the file
+        output.seek(0)
+
+        # Create the HttpResponse to send the file to the user
+        response = HttpResponse(output.read(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="sale_{sale_id}.pdf"'
+
+        return response
