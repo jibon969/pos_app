@@ -1394,19 +1394,4 @@ table {
   margin-top: 5mm;
 }
 
-.btn {
-  background-color: #007bff; /* Bootstrap primary color */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
-.btn:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-}
