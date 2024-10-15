@@ -1,0 +1,50 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block title %} Update Product - {{block.super}} {% endblock %}
+
+{% block content %}
+
+    <section class="upload-section">
+        <div class="container-fluid">
+            <h1 class="text-center">Update Product </h1>
+            <hr>
+            <div class="upload-product">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.name|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.category|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.price|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.sku|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.status|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            {{ form.description|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-dark btn-lg">
+                            Submit <i class="fa fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
