@@ -35,13 +35,13 @@ h6 {
 --------------------------------------------------------------*/
 #main {
   margin-top: 60px;
-  padding: 20px 30px;
+  padding: 1px;
   transition: all 0.3s;
 }
 
 @media (max-width: 1199px) {
   #main {
-    padding: 20px;
+    padding: 1px;
   }
 }
 
@@ -352,7 +352,7 @@ h6 {
 
 @media (min-width: 1200px) {
   .logo {
-    width: 280px;
+    min-width: 230px;
   }
 }
 
@@ -381,7 +381,7 @@ h6 {
 
 .header .toggle-sidebar-btn {
   font-size: 32px;
-  padding-left: 10px;
+  padding-left: -20px;
   cursor: pointer;
   color: #012970;
 }
@@ -594,7 +594,7 @@ h6 {
   top: 60px;
   left: 0;
   bottom: 0;
-  width: 300px;
+  width: 250px;
   z-index: 996;
   transition: all 0.3s;
   padding: 20px;
@@ -607,7 +607,7 @@ h6 {
 
 @media (max-width: 1199px) {
   .sidebar {
-    left: -300px;
+    left: -250px;
   }
 }
 
@@ -625,7 +625,7 @@ h6 {
 
   #main,
   #footer {
-    margin-left: 300px;
+    margin-left: 250px;
   }
 }
 
@@ -643,7 +643,7 @@ h6 {
   }
 
   .toggle-sidebar .sidebar {
-    left: -300px;
+    left: -250px;
   }
 }
 
@@ -1263,7 +1263,7 @@ h6 {
 
 .add-item-section{
   background-color: gainsboro;
-  padding: 6px;
+  padding: 5.5px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -1274,10 +1274,11 @@ h6 {
 }
 
 .add-item-button{
-  background-color: #000;
+  background-color: #070707;
   color: #FFF;
   padding: 5px;
-  border-radius: 7px;
+  min-width: 120px;
+  border-radius: 5px;
 }
 
 .table-fixed-width{
