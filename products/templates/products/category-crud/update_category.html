@@ -1,0 +1,33 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+{% block title %} Update Category - {{block.super}} {% endblock %}
+
+{% block content %}
+
+    <section class="category-form">
+        <div class="container-fluid">
+            <h5 class="text-center">
+                Update Category
+            </h5>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body mt-3">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="name" placeholder="Category name" class="form-control mb-2" value={{category.name}}>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>     
+                        </div>
+                    </div>               
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
