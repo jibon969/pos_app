@@ -1,0 +1,129 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+{% block title %} Point Of Sales  - {{block.super}} {% endblock %}
+
+{% block content %}
+
+
+    <section class="pos-section mt-3">
+        <div class="container-fluid">
+                <div class="card">
+                    <h5 class="card-header bg-dark text-white">
+                        Point Of Sales 
+                    </h5>
+                    <div class="card-body">
+                        <div class="row">
+                        <div class="col-md-9">
+                            <div class="">
+                                <form method="POST" action="{% url 'add-sale-item' %}" class="align-items-center">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-8 col-lg-8 col-xl-8">
+                                            <h4 class="item-sub-title">Add Product</h4>
+                                            <select name="product_id" class="form-control form-control-lg"  id="select">
+                                                {% for product in products %}
+                                                    <option></option>
+                                                    <option value="{{ product.id }}">
+                                                        {{ product.name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2 col-xl-2">
+                                            <h4 class="item-sub-title">Quantity</h4>
+                                            <input type="number" 
+                                            name="quantity" 
+                                            id="quantity" 
+                                            value="1" min="1" 
+                                            class="form-control text-center">
+                                        </div>
+                                        <div class="col-md-2 col-lg-2 col-xl-2">
+                                            <h4 class="item-sub-title">Add Item</h4>
+                                            <div class="">
+                                                <button type="submit" class="add-item-button">
+                                                    <span class="fa fa-shopping-cart"></span> Add Item
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="item-list-section">
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table table-bordered table-hover" >
+                                        <thead class="bg-dark text-white">
+                                            <tr class="text-center">
+                                                <th>ID</th>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Total</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for sales in sale_details %}
+                                                <tr class="text-center">
+                                                    <td>{{ sales.id }}</td>
+                                                    <td style="">
+                                                        {{ sales.product.name }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <form method="POST" action="{% url 'update_quantity' sales.id %}" class="d-flex justify-content-center">
+                                                            {% csrf_token %}
+                                                            <div class="input-group">
+                                                                <input type="number" 
+                                                                    class="form-control text-center" 
+                                                                    name="quantity" 
+                                                                    min="1" 
+                                                                    max="{{ sales.product.inventory.stock }}" 
+                                                                    value="{{ sales.quantity }}" 
+                                                                >
+                                                                <button type="submit" class="btn btn-secondary">Update</button>
+                                                            </div>
+                                                        </form>
+                                                    </td>
+                                                    <td>{{ sales.price }}</td>
+                                                    <td>{{ sales.total_price }}</td>
+                                                    <td>
+                                                        <a href="{% url 'remove-item' sales.id %}" class="btn btn-danger">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="checkout-form">
+                                <form method="POST" action="{% url 'checkout_view' %}">
+                                    {% csrf_token %}
+                                    <label for="sub-total">Sub Total</label>
+                                    <input type="text" id="sub-total" class="form-control mb-2" name="sub-total" value="{{ sale.sub_total }}" readonly>
+                        
+                                    <label for="tax_percentage">Tax (%)</label>
+                                    <input type="text" class="form-control mb-2" id="tax_percentage" name="tax_percentage" value="5.00">
+                                    <label for="amount_payed">Amount Payed</label>
+                                    <input type="text" class="form-control mb-3" id="amount_payed" name="amount_payed" required>
+                              
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-info" type="button">Checkout</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+ 
+{% endblock %}
+
+
+
