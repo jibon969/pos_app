@@ -201,12 +201,12 @@
   <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="#" target="_blank">
+        <a class="nav-link" href="{% url 'dashboard' %}">
           <i class="bi bi-grid"></i>
-          <span>Back to Website</span>
+          <span>Hi, {{ request.user }}</span>
         </a>
       </li>
-      <li class="nav-item">
+      {% comment %} <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -218,31 +218,31 @@
             </a>
           </li>
         </ul>
-      </li>
+      </li> {% endcomment %}
       <li class="nav-heading">Pages</li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
-          <i class="bi bi-list"></i>
-          <span>Category List</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
-          <i class="bi bi-list"></i>
-          <span>Product List</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
+        <a class="nav-link collapsed" href="{% url 'pos' %}">
           <i class="bi bi-card-list"></i>
           <span>POS</span>
         </a>
       </li>
       <!-- Contact -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
+        <a class="nav-link collapsed" href="{% url 'sales-report' %}">
           <i class="bi bi-credit-card"></i>
-          <span>Sales</span>
+          <span>Sales Report</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'category_list' %}">
+          <i class="bi bi-list"></i>
+          <span>Category List</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'product_list' %}">
+          <i class="bi bi-list"></i>
+          <span>Product List</span>
         </a>
       </li>
       <!-- Register -->
@@ -272,7 +272,7 @@
   </main>
 
   <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer fixed-bottom" >
+  <footer id="footer" class="footer fixed-bottom">
     <div class="copyright">
       &copy; Copyright <strong><span>Point of Sales </span></strong>. All Rights Reserved
     </div>

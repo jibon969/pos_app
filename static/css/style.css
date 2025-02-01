@@ -1,0 +1,11 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.checkout-form{
+    background-color: #000;
+    color: #FFF;
+    border-radius: 10px;
+    padding: 10px;
+}

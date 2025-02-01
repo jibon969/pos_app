@@ -1,179 +1,16 @@
-# from django.shortcuts import render, get_object_or_404, redirect
-# from django.contrib import messages
-# from decimal import Decimal
-# from products.models import Product, Inventory
-# from sales.models import Sale, SaleDetail
-
-
-# def pos(request):
-#     products = Product.objects.all()
-#     sale_details = SaleDetail.objects.all()
-
-#     context = {
-#         "products": products,
-#         "sale_details": sale_details
-#     }
-#     return render(request, 'sales/pos.html', context)
-
-
-# def add_sale_item(request):
-#     if request.method == "POST":
-#         product_id = request.POST.get('product_id')
-#         quantity = int(request.POST.get('quantity', 1))
-
-#         product = get_object_or_404(Product, id=product_id)
-#         inventory = get_object_or_404(Inventory, product=product)  # Fetch the inventory for the product
-
-#         # Check if requested quantity exceeds available stock
-#         if inventory.stock < quantity:
-#             messages.error(request, f"Only {inventory.stock} units of {product.name} are available.")
-#             return redirect('pos')  # Redirect to the cart or relevant page
-
-#         # Assuming you have an active sale (create if necessary)
-#         sale, created = Sale.objects.get_or_create(
-#             id=request.session.get('sale_id'), defaults={'sub_total': 0, 'grand_total': 0}
-#         )
-#         request.session['sale_id'] = sale.id
-
-#         # Check if the product is already in the cart (SaleDetail)
-#         sale_total, detail_created = SaleDetail.objects.get_or_create(
-#             sale=sale, 
-#             product=product, 
-#             defaults={
-#                 'price': product.price, 
-#                 'quantity': quantity
-#             }
-#         )
-
-#         if not detail_created:
-#             # Update the quantity and price if product is already in the cart
-#             new_quantity = sale_total.quantity + quantity
-#             if new_quantity > inventory.stock:
-#                 messages.error(request, f"Cannot add {quantity} more units. Only {inventory.stock} available.")
-#                 return redirect('pos')
-
-#             sale_total.quantity = new_quantity
-#             sale_total.price = product.price
-#             sale_total.save()
-
-#         # Update the inventory stock after adding to cart
-#         inventory.stock -= quantity
-#         inventory.save()
-
-#         # Recalculate totals in the sale
-#         sale.calculate_totals()
-
-#         messages.success(request, f"{product.name} added to cart successfully.")
-#         return redirect('pos')  # Redirect to the cart or the same page
-
-#     messages.error(request, "Invalid request.")
-#     return redirect('pos')  # Redirect to the cart or relevant page
-
-
-# def increase_quantity(request, sale_detail_id):
-#     sale_detail = get_object_or_404(SaleDetail, id=sale_detail_id)
-#     product = sale_detail.product
-#     inventory = get_object_or_404(Inventory, product=product)
-
-#     if sale_detail.quantity < inventory.stock:
-#         sale_detail.quantity += 1
-#         sale_detail.save()
-#         inventory.stock -= 1
-#         inventory.save()
-
-#         # Recalculate the sale totals
-#         sale_detail.sale.calculate_totals()
-
-#         messages.success(request, f"Increased quantity of {product.name}.")
-#     else:
-#         messages.error(request, f"Only {inventory.stock} units of {product.name} are available.")
-    
-#     return redirect('pos')
-
-
-# def decrease_quantity(request, sale_detail_id):
-#     sale_detail = get_object_or_404(SaleDetail, id=sale_detail_id)
-#     product = sale_detail.product
-#     inventory = get_object_or_404(Inventory, product=product)
-
-#     if sale_detail.quantity > 1:
-#         sale_detail.quantity -= 1
-#         sale_detail.save()
-#         inventory.stock += 1
-#         inventory.save()
-
-#         # Recalculate the sale totals
-#         sale_detail.sale.calculate_totals()
-
-#         messages.success(request, f"Decreased quantity of {product.name}.")
-#     else:
-#         messages.error(request, "Quantity cannot be less than 1. Use the remove option to delete the item.")
-
-#     return redirect('pos')
-
-
-# def remove_item(request, sale_detail_id):
-#     sale_detail = get_object_or_404(SaleDetail, id=sale_detail_id)
-#     product = sale_detail.product
-#     inventory = get_object_or_404(Inventory, product=product)
-
-#     # Return the stock to inventory
-#     inventory.stock += sale_detail.quantity
-#     inventory.save()
-
-#     # Delete the SaleDetail (remove the item from cart)
-#     sale_detail.delete()
-
-#     # Recalculate the sale totals
-#     sale_detail.sale.calculate_totals()
-
-#     messages.success(request, f"Removed {product.name} from cart.")
-#     return redirect('pos')
-
-
-# def checkout_view(request):
-#     if request.method == 'POST':
-#         sub_total = Decimal(request.POST.get('sub-total', '0'))
-#         tax_percentage = Decimal(request.POST.get('tax-inclusive', '0'))
-#         amount_payed = Decimal(request.POST.get('amount-payed', '0'))
-
-#         # Calculate tax amount and grand total
-#         tax_amount = sub_total * (tax_percentage / Decimal('100'))
-#         grand_total = sub_total + tax_amount
-#         amount_change = amount_payed - grand_total
-
-#         # Create a new Sale instance
-#         sale = Sale.objects.create(
-#             sub_total=sub_total,
-#             tax_percentage=tax_percentage,
-#             tax_amount=tax_amount,
-#             grand_total=grand_total,
-#             amount_payed=amount_payed,
-#             amount_change=amount_change
-#         )
-
-#         # Redirect or show a success message
-#         return redirect('home', sale_id=sale.id)
-
-#     return render(request, 'sales/pos.html')
-
-
-# def checkout_success_view(request, sale_id):
-#     sale = Sale.objects.get(id=sale_id)
-#     return render(request, 'sales/checkout_success.html', {'sale': sale})
-
-# ===================================================================================
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from decimal import Decimal, InvalidOperation
-from products.models import Product, Inventory
+from products.models import Product, InventoryBatch
 from sales.models import Sale, SaleDetail
+from django.http import HttpResponse
+import tempfile
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 
 def pos(request):
     products = Product.objects.all()
-    
-    # Fetch sale details from session, or start a new sale if necessary
     sale_id = request.session.get('sale_id')
     sale = Sale.objects.filter(id=sale_id).first()
     sale_details = sale.details.all() if sale else []
@@ -192,44 +29,45 @@ def add_sale_item(request):
         quantity = int(request.POST.get('quantity', 1))
 
         product = get_object_or_404(Product, id=product_id)
-        inventory = get_object_or_404(Inventory, product=product)  # Fetch the inventory for the product
+        inventory_batches = InventoryBatch.objects.filter(product=product).order_by('date_received')
 
-        # Check if requested quantity exceeds available stock
-        if inventory.stock < quantity:
-            messages.error(request, f"Only {inventory.stock} units of {product.name} are available.")
+        # Calculate total stock available across all batches
+        total_stock = sum(batch.quantity for batch in inventory_batches)
+
+        if total_stock < quantity:
+            messages.error(request, f"Only {total_stock} units of {product.name} are available.")
             return redirect('pos')
 
-        # Create or fetch an existing sale
         sale, created = Sale.objects.get_or_create(
             id=request.session.get('sale_id'), defaults={'sub_total': 0, 'grand_total': 0}
         )
         request.session['sale_id'] = sale.id
 
-        # Add item to sale or update the quantity if already in sale
         sale_detail, detail_created = SaleDetail.objects.get_or_create(
-            sale=sale, 
-            product=product, 
-            defaults={
-                'price': product.price, 
-                'quantity': quantity
-            }
+            sale=sale,
+            product=product,
+            defaults={'price': product.price, 'quantity': quantity}
         )
 
         if not detail_created:
-            # Update the quantity and check stock if product is already in cart
             new_quantity = sale_detail.quantity + quantity
-            if new_quantity > inventory.stock:
-                messages.error(request, f"Cannot add {quantity} more units. Only {inventory.stock} available.")
-                return redirect('pos')
-
             sale_detail.quantity = new_quantity
             sale_detail.save()
 
-        # Update inventory stock after adding to cart
-        inventory.stock -= quantity
-        inventory.save()
+        # Now, reduce stock using FIFO
+        remaining_quantity = quantity
+        for batch in inventory_batches:
+            if remaining_quantity <= 0:
+                break
+            if batch.quantity >= remaining_quantity:
+                batch.quantity -= remaining_quantity
+                batch.save()
+                break
+            else:
+                remaining_quantity -= batch.quantity
+                batch.quantity = 0
+                batch.save()
 
-        # Recalculate totals in the sale
         sale.calculate_totals()
 
         messages.success(request, f"{product.name} added to cart successfully.")
@@ -239,55 +77,74 @@ def add_sale_item(request):
     return redirect('pos')
 
 
-def increase_quantity(request, sale_detail_id):
-    sale_detail = get_object_or_404(SaleDetail, id=sale_detail_id)
-    product = sale_detail.product
-    inventory = get_object_or_404(Inventory, product=product)
+def update_quantity(request, sale_detail_id):
+    if request.method == 'POST':
+        sale_detail = get_object_or_404(SaleDetail, id=sale_detail_id)
+        product = sale_detail.product
+        inventory_batches = InventoryBatch.objects.filter(product=product).order_by('date_received')
 
-    if sale_detail.quantity < inventory.stock:
-        sale_detail.quantity += 1
-        sale_detail.save()
-        inventory.stock -= 1
-        inventory.save()
+        total_stock = sum(batch.quantity for batch in inventory_batches) + sale_detail.quantity
 
-        # Recalculate the sale totals
-        sale_detail.sale.calculate_totals()
+        try:
+            new_quantity = int(request.POST.get('quantity', sale_detail.quantity))
 
-        messages.success(request, f"Increased quantity of {product.name}.")
-    else:
-        messages.error(request, f"Only {inventory.stock} units of {product.name} are available.")
-    
+            if new_quantity > total_stock:
+                messages.error(request, f"Only {total_stock} units of {product.name} are available.")
+            elif new_quantity < 1:
+                messages.error(request, "Quantity cannot be less than 1.")
+            else:
+                difference = new_quantity - sale_detail.quantity
+
+                # If the quantity increases, reduce from inventory stock
+                if difference > 0:
+                    remaining_quantity = difference
+                    for batch in inventory_batches:
+                        if remaining_quantity <= 0:
+                            break
+                        if batch.quantity >= remaining_quantity:
+                            batch.quantity -= remaining_quantity
+                            batch.save()
+                            break
+                        else:
+                            remaining_quantity -= batch.quantity
+                            batch.quantity = 0
+                            batch.save()
+
+                # If the quantity decreases, return to inventory stock
+                elif difference < 0:
+                    remaining_quantity = abs(difference)
+                    for batch in inventory_batches:
+                        if batch.quantity > 0:
+                            batch.quantity += remaining_quantity
+                            batch.save()
+                            break
+
+                # Update the sale detail quantity
+                sale_detail.quantity = new_quantity
+                sale_detail.save()
+
+                # Recalculate the sale totals
+                sale_detail.sale.calculate_totals()
+
+                messages.success(request, f"Quantity of {product.name} updated.")
+        except ValueError:
+            messages.error(request, "Invalid quantity. Please enter a valid number.")
+
     return redirect('pos')
 
-
-def decrease_quantity(request, sale_detail_id):
-    sale_detail = get_object_or_404(SaleDetail, id=sale_detail_id)
-    product = sale_detail.product
-    inventory = get_object_or_404(Inventory, product=product)
-
-    if sale_detail.quantity > 1:
-        sale_detail.quantity -= 1
-        sale_detail.save()
-        inventory.stock += 1
-        inventory.save()
-
-        # Recalculate the sale totals
-        sale_detail.sale.calculate_totals()
-
-        messages.success(request, f"Decreased quantity of {product.name}.")
-    else:
-        messages.error(request, "Quantity cannot be less than 1. Use the remove option to delete the item.")
-
-    return redirect('pos')
 
 def remove_item(request, sale_detail_id):
     sale_detail = get_object_or_404(SaleDetail, id=sale_detail_id)
     product = sale_detail.product
-    inventory = get_object_or_404(Inventory, product=product)
+    inventory_batches = InventoryBatch.objects.filter(product=product).order_by('-date_received')
 
     # Return the stock to inventory
-    inventory.stock += sale_detail.quantity
-    inventory.save()
+    remaining_quantity = sale_detail.quantity
+    for batch in inventory_batches:
+        if remaining_quantity <= 0:
+            break
+        batch.quantity += remaining_quantity
+        batch.save()
 
     # Delete the SaleDetail (remove the item from cart)
     sale_detail.delete()
@@ -298,37 +155,74 @@ def remove_item(request, sale_detail_id):
     messages.success(request, f"Removed {product.name} from cart.")
     return redirect('pos')
 
+
 def checkout_view(request):
     if request.method == 'POST':
         try:
-            sub_total = Decimal(request.POST.get('sub-total', '0'))  # Fetch and convert sub-total
-            tax_percentage = Decimal(request.POST.get('tax_percentage', '0'))  # Fetch and convert tax
-            amount_payed = Decimal(request.POST.get('amount_payed', '0'))  # Fetch and convert amount paid
+            sale_id = request.session.get('sale_id')
+            sale = get_object_or_404(Sale, id=sale_id)
 
-            # Calculate tax amount and grand total
-            tax_amount = sub_total * (tax_percentage / Decimal('100'))
-            grand_total = sub_total + tax_amount
-            amount_change = amount_payed - grand_total
+            # Retrieve and calculate the sub_total from the SaleDetails
+            sale.calculate_totals()
 
-            # Create a new Sale instance
-            sale = Sale.objects.create(
-                sub_total=sub_total,
-                tax_percentage=tax_percentage,
-                tax_amount=tax_amount,
-                grand_total=grand_total,
-                amount_payed=amount_payed,
-                amount_change=amount_change
-            )
+            # Extract the tax percentage and amount payed from the form
+            tax_percentage = Decimal(request.POST.get('tax_percentage', '0'))
+            amount_payed = Decimal(request.POST.get('amount_payed', '0'))
 
-            # Redirect to success page
-            return redirect('dashboard')
+            # Update sale with user-provided tax percentage and payment info
+            sale.tax_percentage = tax_percentage
+            sale.amount_payed = amount_payed
+
+            # Recalculate totals after setting tax percentage and payment amount
+            sale.calculate_totals()
+
+            # Clear sale_id from the session after successful calculation
+            request.session.pop('sale_id', None)
+
+            return redirect('checkout_success', sale_id=sale.id)
 
         except InvalidOperation:
+            # Handle invalid numeric input
             messages.error(request, "Invalid input for totals. Please enter valid numeric values.")
             return redirect('pos')
 
     return render(request, 'sales/pos.html')
 
+
+
+# View for checkout success
 def checkout_success_view(request, sale_id):
+    # Get the sale by ID or return 404
     sale = get_object_or_404(Sale, id=sale_id)
-    return render(request, 'sales/checkout_success.html', {'sale': sale})
+    # Get the details (SaleDetail) for this sale
+    sale_details = sale.details.all()
+    # Pass the sale and sale details to the template
+    context = {
+        'sale': sale, 
+        'sale_details': sale_details
+    }
+    return render(request, 'sales/checkout_success.html', context)
+
+
+def generate_pdf_view(request, sale_id):
+    sale = get_object_or_404(Sale, id=sale_id)
+    sale_details = sale.details.all()
+    template_path = 'sales/checkout_success_pdf.html'
+        
+    context = {
+        'sale': sale,
+        'sale_details': sale_details
+    }
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="sale_{sale_id}.pdf"'  # Open in browser
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Create a PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    if pisa_status.err:
+        return HttpResponse(f'We had some errors with code {pisa_status.err}')
+    
+    return response

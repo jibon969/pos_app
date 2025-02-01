@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale Invoice - {{ sale.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            text-align: center;
+        }
+        .details {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .totals {
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sale Invoice</h1>
+    <h3>Sale ID: {{ sale.id }}</h3>
+    <p><strong>Date:</strong> {{ sale.date_added }}</p>
+
+    <h3>Sale Summary</h3>
+    <p><strong>Sub Total:</strong> ${{ sale.sub_total }}</p>
+    <p><strong>Tax ({{ sale.tax_percentage }}%):</strong> ${{ sale.tax_amount }}</p>
+    <p><strong>Grand Total:</strong> ${{ sale.grand_total }}</p>
+    <p><strong>Amount Paid:</strong> ${{ sale.amount_payed }}</p>
+    <p><strong>Change:</strong> ${{ sale.amount_change }}</p>
+
+    <h3 class="details">Sale Details</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detail in sale_details %}
+            <tr>
+                <td>{{ detail.product.name }}</td>
+                <td>${{ detail.price }}</td>
+                <td>{{ detail.quantity }}</td>
+                <td>${{ detail.total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <p><strong>Total:</strong> ${{ sale.grand_total }}</p>
+    </div>
+</body>
+</html>

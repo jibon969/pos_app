@@ -1,0 +1,149 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+{% block title %} Sales Report - {{block.super}} {% endblock %}
+
+{% block content %}
+
+    <section class="main-section mt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <!-- Breadcrumbs-->
+                    <ol class="breadcrumb mt-2">
+                        <li class="breadcrumb-item h6 active">
+                            Dashboard
+                        </li>
+                        <li class="breadcrumb-item h6">
+                            <a href="#">Sales Report</a>
+                        </li>
+                    </ol>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col mb-2">
+                    <div class="float-start">
+                        <div class="download-modal-ui">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#downloadModal">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="downloadModalLabel">Download CSV File</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Download CSV form -->
+                                            <form action="#" method="POST">
+                                                {% csrf_token %}
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="startDate" class="form-label">Start Date</label>
+                                                            <input type="date" name="start-date" class="form-control" id="startDate" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="endDate" class="form-label">End Date</label>
+                                                            <input type="date" name="end-date" class="form-control" id="endDate" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-3">
+                                                    <div class="col">
+                                                        <button type="submit" class="btn btn-dark btn-block btn-lg w-100">
+                                                            Download <i class="fa fa-paper-plane"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="float-end">
+                        <form action="#" class="d-flex">
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" placeholder="Search">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="main-table">
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-bordered">
+                                <thead class="table-dark">
+                                    <tr class="text-center">
+                                        <th>Sale ID</th>
+                                        <th>Date</th>
+                                        <td>Product Name</td>
+                                        <th>Sub Total</th>
+                                        <th>Tax Amount</th>
+                                        <th>Grand Total</th>
+                                        <th>Quantity Sold</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if object_list %}
+                                        {% for detail in object_list %}
+                                            <tr class="text-center">
+                                                <td>{{ detail.sale_id }}</td>
+                                                <td>{{ detail.date_added|date:"Y-m-d H:i" }}</td>
+                                                <td>{{ detail.product_names }}</td>
+                                                <td>৳ {{ detail.sub_total|floatformat:2 }}</td>
+                                                <td>৳ {{ detail.tax_amount|floatformat:2 }}</td>
+                                                <td>৳ {{ detail.grand_total|floatformat:2 }}</td>
+                                                <td>{{ detail.quantity_sold }}</td>
+                                                <td>৳ {{ detail.revenue|floatformat:2 }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="16">
+                                                <div class="alert alert-dark alert-dismissible fade show text-center" role="alert">
+                                                    <strong>Oops!</strong> No results found for
+                                                    <span class="text-success font-weight-bold">{{ query }}</span>,
+                                                    try a different search.
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <h5 class="text-center my-3">
+                                                    <a href="{% url 'sales-report' %}">
+                                                        <i class="fa fa-undo"></i>  Reload this Page!
+                                                    </a>
+                                                </h5>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {% if object_list %}
+                        {% include "dashboard/pagination.html" with object_list=object_list %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
