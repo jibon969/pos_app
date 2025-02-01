@@ -1,57 +1,67 @@
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
-{% block title %} Point of Sales - {{ block.super }}  {% endblock %}
+{% block title %} Sales Report - {{block.super}} {% endblock %}
 
 {% block content %}
 
-
-    <section class="best-selling-products">
+    <section class="main-section mt-3">
         <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                    <!-- Breadcrumbs -->
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mt-2">
-                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                            <li class="breadcrumb-item">
-                                <a href="#">Order Overview</a>
-                            </li>
-                        </ol>
-                    </nav>
+                    <!-- Breadcrumbs-->
+                    <ol class="breadcrumb mt-2">
+                        <li class="breadcrumb-item h6 active">
+                            Dashboard
+                        </li>
+                        <li class="breadcrumb-item h6">
+                            <a href="#">Sales Report</a>
+                        </li>
+                    </ol>
                 </div>
             </div>
             <div class="row">
-                <div class="col col-xl-3 col-md-3 col-lg-3">
-                    <div class="card bg-danger">
-                        <div class="card-body ">
-                            <div>Total Category</div>
-                            <div>8</div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <h5 class="card-header ">
+                            Total Sales
+                        </h5>
+                        <div class="card-body mt-2">
+                            <h1>৳ {{ total_sales }}</h1>
                         </div>
                     </div>
                 </div>
-                <div class="col col-xl-3 col-md-3 col-lg-3">
-                    <div class="card bg-info">
-                        <div class="card-body ">
-                            <div>Total Products</div>
-                            <div>8</div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <h5 class="card-header">
+                            Total Quantity Sold
+                        </h5>
+                        <div class="card-body mt-2">
+                            <h1>{{ total_quantity_sold }}</h1>
                         </div>
                     </div>
                 </div>
-                <div class="col col-xl-3 col-md-3 col-lg-3">
-                    <div class="card bg-info">
-                        <div class="card-body ">
-                            <div>Total Customers</div>
-                            <div>8</div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <h5 class="card-header">
+                            Total Revenue
+                        </h5>
+                        <div class="card-body mt-2">
+                            <h1>৳ {{ total_revenue|floatformat:2 }}</h1>
                         </div>
                     </div>
                 </div>
-                <div class="col col-xl-3 col-md-3 col-lg-3">
-                    <div class="upload-content">
-                        <a href="">Uplaod Products</a>
+                <div class="col-md-3">
+                    <div class="card">
+                        <h5 class="card-header">
+                            Total Tax
+                        </h5>
+                        <div class="card-body mt-2">
+                            <h1>৳ {{ total_tax|floatformat:2 }}</h1>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-{% endblock content %}
+{% endblock %}

@@ -8,41 +8,56 @@
 
     <section class="upload-section">
         <div class="container-fluid">
-            <h1 class="text-center">Uplaod Product </h1>
-            <hr>
+            <div class="row">
+                <div class="col">
+                    <!-- Breadcrumbs-->
+                    <ol class="breadcrumb mt-2">
+                        <li class="breadcrumb-item h6 active">
+                           <a href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item h6">
+                            <a href="#">Upload Product</a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
             <div class="upload-product">
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            {{ form.name|as_crispy_field }}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            {{ form.category|as_crispy_field }}
-                        </div>
+                <div class="card">
+                    <div class="card-body mt-3">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.name|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.category|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    {{ form.price|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    {{ form.sku|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    {{ form.status|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    {{ form.description|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-dark btn-lg">
+                                    Submit <i class="fa fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            {{ form.price|as_crispy_field }}
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            {{ form.sku|as_crispy_field }}
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            {{ form.status|as_crispy_field }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            {{ form.description|as_crispy_field }}
-                        </div>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-dark btn-lg">
-                            Submit <i class="fa fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </section>

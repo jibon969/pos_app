@@ -10,46 +10,55 @@
             <div class="row">
                 <div class="col">
                     <div id="invoice-POS">
-                        <center id="top">
-                            <div class="logo"></div>
-                            <div class="info">
-                                <h2>POS System</h2>
-                            </div>
-                        </center>
-
                         <div id="mid">
-                            <div class="info">
+                            <h2 class="text-center">POS System</h2>
+                            <div class="info text-center" >
                                 <p>
                                     Address: Dhaka, Bangladesh<br>
                                     Email: jibon.py@gmail.com<br>
                                     Phone: 0198-7132-107<br>
                                 </p>
                             </div>
-                        </div><!-- End Invoice Mid -->
-
+                        </div>
                         <div id="bot">
                             <div id="table">
                                 <table>
                                     <tr class="tabletitle">
-                                        <td class="item"><h2>Item</h2></td>
-                                        <td class="Hours"><h2>Qty</h2></td>
-                                        <td class="Rate"><h2>Sub Total</h2></td>
+                                        <td class="item">
+                                            <h2>Item</h2>
+                                        </td>
+                                        <td class="Hours">
+                                            <h2>Qty</h2>
+                                        </td>
+                                        <td class="Rate">
+                                            <h2>Sub Total</h2>
+                                        </td>
                                     </tr>
 
                                     <!-- Loop through sale details here -->
                                     {% for detail in sale_details %}
                                     <tr class="service">
-                                        <td class="tableitem"><p class="itemtext">{{ detail.product.name }}</p></td>
-                                        <td class="tableitem"><p class="itemtext">{{ detail.quantity }}</p></td>
-                                        <td class="tableitem"><p class="itemtext">${{ detail.total_price }}</p></td>
+                                        <td class="tableitem">
+                                            <p class="itemtext">{{ detail.product.name }}</p>
+                                        </td>
+                                        <td class="tableitem">
+                                            <p class="itemtext">{{ detail.quantity }}</p>
+                                        </td>
+                                        <td class="tableitem">
+                                            <p class="itemtext">৳ {{ detail.total_price }}</p>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                     
                                     <!-- Tax and total row -->
                                     <tr class="tabletitle">
                                         <td></td>
-                                        <td class="Rate"><h2>Tax</h2></td>
-                                        <td class="payment"><h2>${{ sale.tax_amount }}</h2></td>
+                                        <td class="Rate">
+                                            <h2>Tax</h2>
+                                        </td>
+                                        <td class="payment">
+                                            <h2>৳ {{ sale.tax_amount }}</h2>
+                                        </td>
                                     </tr>
                                     <tr class="tabletitle">
                                         <td></td>
@@ -57,7 +66,7 @@
                                             <h2>Grant Total</h2>
                                         </td>
                                         <td class="payment">
-                                            ${{ sale.grand_total }}
+                                            ৳ {{ sale.grand_total }}
                                         </td>
                                     </tr>
                                     <tr class="tabletitle">
@@ -66,7 +75,7 @@
                                             <h2>Amount Paid:</h2>
                                         </td>
                                         <td class="payment">
-                                            <h2>${{ sale.amount_payed }}</h2>
+                                            <h2>৳ {{ sale.amount_payed }}</h2>
                                         </td>
                                     </tr>
                                     <tr class="tabletitle">
@@ -75,13 +84,12 @@
                                             <h2>Amount Change</h2>
                                         </td>
                                         <td class="payment">
-                                            ${{ sale.amount_change }}
+                                            ৳ {{ sale.amount_change }}
                                         </td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
-
                         <!-- Print Button -->
                         <div style="text-align: center; margin-top: 20px;">
                             <button onclick="printInvoice()" class="btn btn-primary">Print Invoice</button>

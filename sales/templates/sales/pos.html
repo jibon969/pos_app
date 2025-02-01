@@ -67,10 +67,8 @@
                                     {% for sales in sale_details %}
                                         <tr class="text-center">
                                             <td>{{ sales.id }}</td>
-                                            <td style="">
-                                                {{ sales.product.name }}
-                                            </td>
-                                            <td class="text-center">
+                                            <td>{{ sales.product.name }}</td>
+                                            <td class="text-center" style="width: 200px;">
                                                 <form method="POST" action="{% url 'update_quantity' sales.id %}" class="d-flex justify-content-center">
                                                     {% csrf_token %}
                                                     <div class="input-group">
@@ -112,7 +110,7 @@
                             <input type="text" class="form-control mb-3" id="amount_payed" name="amount_payed" required>
                       
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-info" type="button">Checkout</button>
+                                <button type="submit" class="btn btn-warning" type="button">Checkout</button>
                             </div>
                         </form>
                     </div>

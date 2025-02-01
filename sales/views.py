@@ -4,8 +4,10 @@ from decimal import Decimal, InvalidOperation
 from products.models import Product, InventoryBatch
 from sales.models import Sale, SaleDetail
 from django.http import HttpResponse
-from weasyprint import HTML
 import tempfile
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 
 def pos(request):
     products = Product.objects.all()
@@ -203,31 +205,24 @@ def checkout_success_view(request, sale_id):
 
 
 def generate_pdf_view(request, sale_id):
-    # Get the sale by ID or return 404
     sale = get_object_or_404(Sale, id=sale_id)
     sale_details = sale.details.all()
-
-    # Create the context with sale data
+    template_path = 'sales/checkout_success_pdf.html'
+        
     context = {
         'sale': sale,
         'sale_details': sale_details
     }
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="sale_{sale_id}.pdf"'  # Open in browser
 
-    # Render the HTML template with context data
-    html_string = render(request, 'sales/checkout_success_pdf.html', context).content.decode('utf-8')
+    template = get_template(template_path)
+    html = template.render(context)
 
-    # Generate the PDF from the HTML string
-    html = HTML(string=html_string)
-
-    # Create a temporary file for the PDF
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        html.write_pdf(output.name)
-
-        # Move the file pointer to the start of the file
-        output.seek(0)
-
-        # Create the HttpResponse to send the file to the user
-        response = HttpResponse(output.read(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="sale_{sale_id}.pdf"'
-
-        return response
+    # Create a PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    if pisa_status.err:
+        return HttpResponse(f'We had some errors with code {pisa_status.err}')
+    
+    return response
